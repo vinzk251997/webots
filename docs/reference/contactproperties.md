@@ -54,11 +54,11 @@ Finally, with four values, both solids use asymmetric coefficients, first two fo
 The two friction directions are defined for each faces of the geometric primitives and match with the U and V components used in the texture mapping.
 Only the `Box`, `Plane` and `Cylinder` primitives support asymmetric friction.
 If another primitive is used, only the first value will be used for symetric friction.
-WEBOTS\_HOME/projects/sample/howto/worlds/asymmetric\_friction1.wbt contains an example of fully asymmetric friction.
+[WEBOTS\_HOME/projects/sample/howto/asymmetric\_friction/worlds/asymmetric\_friction1.wbt]({{ url.github_tree  }}/projects/sample/howto/asymmetric\_friction/worlds/asymmetric\_friction1.wbt) contains an example of fully asymmetric friction.
 
 - The `frictionRotation` allows the user to rotate the friction directions used in case of asymmetric `coulombFriction` and/or asymmetric `forceDependentSlip`.
 By default, the directions are the same than the ones used for texture mapping (this can ease defining an asymmetric friction for a textured surface matching the rotation field of the corresponding TextureTransform node).
-WEBOTS\_HOME/projects/sample/howto/worlds/asymmetric\_friction2.wbt illustrates the use of this field.
+[WEBOTS\_HOME/projects/sample/howto/asymmetric\_friction/worlds/asymmetric\_friction2.wbt]({{ url.github_tree  }}/projects/sample/howto/asymmetric\_friction/worlds/asymmetric\_friction1.wbt) illustrates the use of this field.
 
 - The `bounce` field is the coefficient of restitution (COR) between 0 and 1.
 The coefficient of restitution (COR), or *bounciness* of an object is a fractional value representing the ratio of speeds after and before an impact.
@@ -104,4 +104,4 @@ Its gain and pitch are modulated by the linear velocity of the contact surface.
 The formulas affecting the gain and pitch of these sounds were determinated empirically to produce fairly realistic sounds.
 They are subject to improvements.
 
-> **Note**: The youBot robot is a good example of asymmetric coulombFriction and forceDependentSlip, it is located in WEBOTS\_HOME/projects/robot/youbot/worlds/youbot.wbt.
+> **Note**: The youBot robot is a good example of asymmetric coulombFriction and forceDependentSlip, it is located in [WEBOTS\_HOME/projects/robot/youbot/worlds/youbot.wbt]({{ url.github_tree  }}/projects/robot/youbot/worlds/youbot.wbt).
