@@ -1,6 +1,6 @@
 #include <webots/robot.h>
 #include <webots/supervisor.h>
-#include <webots/utils/default_robot_window.h>
+#include <webots/plugins/robot_window/default.h>
 #include <stdio.h>
 #include <string.h>
 
