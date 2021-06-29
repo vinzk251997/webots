@@ -43,7 +43,7 @@ export default class WebotsAnimation extends HTMLElement {
 
     await Promise.all(promises);
     let script = document.createElement('script');
-    script.src = 'https://cyberbotics.com/wwi/R2021b/init_animation.js';
+    script.src = 'resources/web/wwi/init_animation.js';//'https://cyberbotics.com/wwi/R2021b/init_animation.js';
     script.type = 'module';
     document.head.appendChild(script);
   }
