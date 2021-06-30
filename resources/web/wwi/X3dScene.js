@@ -1,4 +1,5 @@
 import Parser, {convertStringToVec3, convertStringToQuaternion} from './Parser.js';
+import ProtoParser from './ProtoParser.js';
 import {webots} from './webots.js';
 import WrenRenderer from './WrenRenderer.js';
 
@@ -107,8 +108,8 @@ export default class X3dScene {
     xmlhttp.overrideMimeType('plain/text');
     xmlhttp.onreadystatechange = async function() {
       if (xmlhttp.readyState === 4 && (xmlhttp.status === 200 || xmlhttp.status === 0)) { // Some browsers return HTTP Status 0 when using non-http protocol (for file://)
-        // const loader = new ProtoParser('');
-        const loader = new Parser('');
+        const loader = new ProtoParser('');
+        //const loader = new Parser('');
         await loader.parse(xmlhttp.responseText, renderer);
       }
     };

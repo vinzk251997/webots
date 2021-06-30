@@ -8,9 +8,6 @@ import Server from './Server.js';
 import Stream from './Stream.js';
 import SystemInfo from './system_info.js';
 import X3dScene from './X3dScene.js';
-// import WrenRenderer from './WrenRenderer.js';
-import ProtoParser from './ProtoParser.js';
-import Parser from './Parser.js';
 
 import WbVector3 from './nodes/utils/WbVector3.js';
 

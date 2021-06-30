@@ -49,7 +49,6 @@ export default class ProtoParser {
   }
 
   async parse(text, renderer, parent, callback) {
-    const viewpointId = 1;
     const fieldOfView = M_PI_4;
     const orientation = new WbVector4(-0.84816706, -0.5241698, -0.07654181, 0.34098753);
     const position = new WbVector3(-1.2506319, 2.288824, 7.564137);
@@ -69,15 +68,25 @@ export default class ProtoParser {
     gtaoNoiseTexture.isTranslucent = true;
 
     WbWorld.instance.scene = new WbScene(smaaAreaTexture, smaaSearchTexture, gtaoNoiseTexture);
-    WbWorld.instance.viewpoint = new WbViewpoint(viewpointId, fieldOfView, orientation, position, exposure, bloomThreshold, zNear, zFar, followSmoothness, followedId, ambientOcclusionRadius);
+    WbWorld.instance.viewpoint = new WbViewpoint(getAnId(), fieldOfView, orientation, position, exposure, bloomThreshold, zNear, zFar, followSmoothness, followedId, ambientOcclusionRadius);
 
     const skyColor = new WbVector3(0.15, 0.45, 1);
-    const background = new WbBackground(2, skyColor);
+    const background = new WbBackground(getAnId(), skyColor);
     WbWorld.instance.sceneTree.push(background);
 
     const size = new WbVector3(0.1, 0.1, 0.1);
-    const box = new WbBox(3, size);
-    WbWorld.instance.sceneTree.push(box);
+    const box = new WbBox(getAnId(), size);
+    WbWorld.instance.nodes.set(box.id, box);
+
+    const castShadows = true;
+    const isPickable = false;
+    const appearance = new WbAppearance(getAnId());
+    WbWorld.instance.nodes.set(appearance.id, appearance);
+
+    const geometry = box;
+    const shape = new WbShape(getAnId(), castShadows, isPickable, appearance, geometry);
+
+    WbWorld.instance.sceneTree.push(shape);
 
     if (document.getElementById('webotsProgressMessage'))
       document.getElementById('webotsProgressMessage').innerHTML = 'Finalizing...';
