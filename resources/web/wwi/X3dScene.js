@@ -52,7 +52,7 @@ export default class X3dScene {
   resize() {
     const width = this.domElement.clientWidth;
     const height = this.domElement.clientHeight;
-
+    console.log('height ' + height + ' width ' + width);
     this.renderer.setSize(width, height);
 
     if (typeof WbWorld.instance === 'undefined')
@@ -97,6 +97,22 @@ export default class X3dScene {
     object.delete();
 
     this.render();
+  }
+
+  loadProtoFile(url) {
+    const renderer = this.renderer;
+
+    const xmlhttp = new XMLHttpRequest();
+    xmlhttp.open('GET', url, true);
+    xmlhttp.overrideMimeType('plain/text');
+    xmlhttp.onreadystatechange = async function() {
+      if (xmlhttp.readyState === 4 && (xmlhttp.status === 200 || xmlhttp.status === 0)) { // Some browsers return HTTP Status 0 when using non-http protocol (for file://)
+        // const loader = new ProtoParser('');
+        const loader = new Parser('');
+        await loader.parse(xmlhttp.responseText, renderer);
+      }
+    };
+    xmlhttp.send();
   }
 
   loadWorldFile(url, onLoad) {

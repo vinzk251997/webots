@@ -1,4 +1,6 @@
-import WrenRenderer from '../wwi/WrenRenderer.js';
+//import WrenRenderer from '../wwi/WrenRenderer.js';
+//import X3dScene from '../wwi/X3dScene.js';
+import {webots} from '../wwi/webots.js';
 
 class ProtoDesigner {
   constructor() {
@@ -38,10 +40,14 @@ class ProtoDesigner {
     console.log('_init done')
     this.loadScene();
   }
-  
+
   loadScene() {
-    console.log('loading scene')
-    this.renderer = new WrenRenderer();
+    console.log('loading scene');
+
+    // this.renderer = new WrenRenderer();
+    const view = new webots.View(document.getElementById('view3d'));
+    view.openProto('test.x3d');
+    //view.open('test.x3d');
   }
 }
 

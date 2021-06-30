@@ -42,32 +42,42 @@ import {webots} from './webots.js';
 /*
   This module takes an x3d world, parse it and populate the scene.
 */
-export default class Parser {
+export default class ProtoParser {
   constructor(prefix = '') {
-    this._prefix = prefix;
+    this._prefix = '../wwi/images/post_processing/';
     WbWorld.init();
   }
 
   async parse(text, renderer, parent, callback) {
-    let xml = null;
-    if (window.DOMParser) {
-      const parser = new DOMParser();
-      xml = parser.parseFromString(text, 'text/xml');
-    }
+    const viewpointId = 1;
+    const fieldOfView = M_PI_4;
+    const orientation = new WbVector4(-0.84816706, -0.5241698, -0.07654181, 0.34098753);
+    const position = new WbVector3(-1.2506319, 2.288824, 7.564137);
+    const exposure = 1;
+    const bloomThreshold = 21;
+    const zNear = 0.05;
+    const zFar = 0;
+    const followSmoothness = 0.5;
+    const followedId = undefined;
+    const ambientOcclusionRadius = 2;
 
-    if (typeof xml === 'undefined')
-      console.error('File to parse not found');
-    else {
-      const scene = xml.getElementsByTagName('Scene')[0];
-      if (typeof scene === 'undefined') {
-        const node = xml.getElementsByTagName('nodes')[0];
-        if (typeof node === 'undefined')
-          console.error('Unknown content, nor Scene, nor Node');
-        else
-          await this._parseChildren(node, parent);
-      } else
-        await this._parseNode(scene);
-    }
+    const smaaAreaTexture = await ProtoParser.loadTextureData(this._prefix, 'smaa_area_texture.png');
+    smaaAreaTexture.isTranslucent = false;
+    const smaaSearchTexture = await ProtoParser.loadTextureData(this._prefix, 'smaa_search_texture.png');
+    smaaSearchTexture.isTranslucent = false;
+    const gtaoNoiseTexture = await ProtoParser.loadTextureData(this._prefix, 'gtao_noise_texture.png');
+    gtaoNoiseTexture.isTranslucent = true;
+
+    WbWorld.instance.scene = new WbScene(smaaAreaTexture, smaaSearchTexture, gtaoNoiseTexture);
+    WbWorld.instance.viewpoint = new WbViewpoint(viewpointId, fieldOfView, orientation, position, exposure, bloomThreshold, zNear, zFar, followSmoothness, followedId, ambientOcclusionRadius);
+
+    const skyColor = new WbVector3(0.15, 0.45, 1);
+    const background = new WbBackground(2, skyColor);
+    WbWorld.instance.sceneTree.push(background);
+
+    const size = new WbVector3(0.1, 0.1, 0.1);
+    const box = new WbBox(3, size);
+    WbWorld.instance.sceneTree.push(box);
 
     if (document.getElementById('webotsProgressMessage'))
       document.getElementById('webotsProgressMessage').innerHTML = 'Finalizing...';
@@ -81,22 +91,10 @@ export default class Parser {
       node.finalize();
     });
 
-    WbWorld.instance.readyForUpdates = true;
-
-    //webots.currentView.x3dScene.resize();
     renderer.render();
     if (document.getElementById('webotsProgress'))
       document.getElementById('webotsProgress').style.display = 'none';
-    if (webots.currentView.toolBar) {
-      webots.currentView.toolBar.enableToolBarButtons(true);
-      if (webots.currentView.runOnLoad === 'real-time')
-        webots.currentView.toolBar.realTime();
-      else if (webots.currentView.runOnLoad === 'run' || webots.currentView.runOnLoad === 'fast')
-        webots.currentView.toolBar.run();
-    }
 
-    if (typeof callback === 'function')
-      callback();
   }
 
   async _parseNode(node, parentNode, isBoundingObject) {
@@ -211,11 +209,11 @@ export default class Parser {
 
   async _parseScene(node) {
     const prefix = DefaultUrl.wrenImagesUrl();
-    const smaaAreaTexture = await Parser.loadTextureData(prefix, 'smaa_area_texture.png');
+    const smaaAreaTexture = await ProtoParser.loadTextureData(prefix, 'smaa_area_texture.png');
     smaaAreaTexture.isTranslucent = false;
-    const smaaSearchTexture = await Parser.loadTextureData(prefix, 'smaa_search_texture.png');
+    const smaaSearchTexture = await ProtoParser.loadTextureData(prefix, 'smaa_search_texture.png');
     smaaSearchTexture.isTranslucent = false;
-    const gtaoNoiseTexture = await Parser.loadTextureData(prefix, 'gtao_noise_texture.png');
+    const gtaoNoiseTexture = await ProtoParser.loadTextureData(prefix, 'gtao_noise_texture.png');
     gtaoNoiseTexture.isTranslucent = true;
     return new WbScene(smaaAreaTexture, smaaSearchTexture, gtaoNoiseTexture);
   }
@@ -264,19 +262,19 @@ export default class Parser {
       topUrl = topUrl.slice(1, topUrl.length - 1);
 
       if (WbWorld.instance.coordinateSystem === 'ENU') {
-        cubeImages[0] = await Parser.loadTextureData(this._prefix, backUrl, false, 90);
-        cubeImages[4] = await Parser.loadTextureData(this._prefix, bottomUrl, false, -90);
-        cubeImages[1] = await Parser.loadTextureData(this._prefix, frontUrl, false, -90);
-        cubeImages[3] = await Parser.loadTextureData(this._prefix, leftUrl, false, 180);
-        cubeImages[2] = await Parser.loadTextureData(this._prefix, rightUrl);
-        cubeImages[5] = await Parser.loadTextureData(this._prefix, topUrl, false, -90);
+        cubeImages[0] = await ProtoParser.loadTextureData(this._prefix, backUrl, false, 90);
+        cubeImages[4] = await ProtoParser.loadTextureData(this._prefix, bottomUrl, false, -90);
+        cubeImages[1] = await ProtoParser.loadTextureData(this._prefix, frontUrl, false, -90);
+        cubeImages[3] = await ProtoParser.loadTextureData(this._prefix, leftUrl, false, 180);
+        cubeImages[2] = await ProtoParser.loadTextureData(this._prefix, rightUrl);
+        cubeImages[5] = await ProtoParser.loadTextureData(this._prefix, topUrl, false, -90);
       } else {
-        cubeImages[5] = await Parser.loadTextureData(this._prefix, backUrl);
-        cubeImages[3] = await Parser.loadTextureData(this._prefix, bottomUrl);
-        cubeImages[4] = await Parser.loadTextureData(this._prefix, frontUrl);
-        cubeImages[1] = await Parser.loadTextureData(this._prefix, leftUrl);
-        cubeImages[0] = await Parser.loadTextureData(this._prefix, rightUrl);
-        cubeImages[2] = await Parser.loadTextureData(this._prefix, topUrl);
+        cubeImages[5] = await ProtoParser.loadTextureData(this._prefix, backUrl);
+        cubeImages[3] = await ProtoParser.loadTextureData(this._prefix, bottomUrl);
+        cubeImages[4] = await ProtoParser.loadTextureData(this._prefix, frontUrl);
+        cubeImages[1] = await ProtoParser.loadTextureData(this._prefix, leftUrl);
+        cubeImages[0] = await ProtoParser.loadTextureData(this._prefix, rightUrl);
+        cubeImages[2] = await ProtoParser.loadTextureData(this._prefix, topUrl);
       }
     }
 
@@ -297,19 +295,19 @@ export default class Parser {
       topIrradianceUrl = topIrradianceUrl.slice(1, topIrradianceUrl.length - 1);
 
       if (WbWorld.instance.coordinateSystem === 'ENU') {
-        irradianceCubeURL[0] = await Parser.loadTextureData(this._prefix, backIrradianceUrl, true, 90);
-        irradianceCubeURL[4] = await Parser.loadTextureData(this._prefix, bottomIrradianceUrl, true, -90);
-        irradianceCubeURL[1] = await Parser.loadTextureData(this._prefix, frontIrradianceUrl, true, -90);
-        irradianceCubeURL[3] = await Parser.loadTextureData(this._prefix, leftIrradianceUrl, true, 180);
-        irradianceCubeURL[2] = await Parser.loadTextureData(this._prefix, rightIrradianceUrl, true);
-        irradianceCubeURL[5] = await Parser.loadTextureData(this._prefix, topIrradianceUrl, true, -90);
+        irradianceCubeURL[0] = await ProtoParser.loadTextureData(this._prefix, backIrradianceUrl, true, 90);
+        irradianceCubeURL[4] = await ProtoParser.loadTextureData(this._prefix, bottomIrradianceUrl, true, -90);
+        irradianceCubeURL[1] = await ProtoParser.loadTextureData(this._prefix, frontIrradianceUrl, true, -90);
+        irradianceCubeURL[3] = await ProtoParser.loadTextureData(this._prefix, leftIrradianceUrl, true, 180);
+        irradianceCubeURL[2] = await ProtoParser.loadTextureData(this._prefix, rightIrradianceUrl, true);
+        irradianceCubeURL[5] = await ProtoParser.loadTextureData(this._prefix, topIrradianceUrl, true, -90);
       } else {
-        irradianceCubeURL[2] = await Parser.loadTextureData(this._prefix, topIrradianceUrl, true);
-        irradianceCubeURL[5] = await Parser.loadTextureData(this._prefix, backIrradianceUrl, true);
-        irradianceCubeURL[3] = await Parser.loadTextureData(this._prefix, bottomIrradianceUrl, true);
-        irradianceCubeURL[4] = await Parser.loadTextureData(this._prefix, frontIrradianceUrl, true);
-        irradianceCubeURL[1] = await Parser.loadTextureData(this._prefix, leftIrradianceUrl, true);
-        irradianceCubeURL[0] = await Parser.loadTextureData(this._prefix, rightIrradianceUrl, true);
+        irradianceCubeURL[2] = await ProtoParser.loadTextureData(this._prefix, topIrradianceUrl, true);
+        irradianceCubeURL[5] = await ProtoParser.loadTextureData(this._prefix, backIrradianceUrl, true);
+        irradianceCubeURL[3] = await ProtoParser.loadTextureData(this._prefix, bottomIrradianceUrl, true);
+        irradianceCubeURL[4] = await ProtoParser.loadTextureData(this._prefix, frontIrradianceUrl, true);
+        irradianceCubeURL[1] = await ProtoParser.loadTextureData(this._prefix, leftIrradianceUrl, true);
+        irradianceCubeURL[0] = await ProtoParser.loadTextureData(this._prefix, rightIrradianceUrl, true);
       }
     }
 
@@ -1054,7 +1052,7 @@ export default class Parser {
     if (typeof prefix !== 'undefined' && !url.startsWith('https://raw.githubusercontent.com'))
       url = prefix + url;
     if (isHdr) {
-      const img = await Parser.loadHDRImage(url);
+      const img = await ProtoParser.loadHDRImage(url);
       image.bits = img.data;
       image.width = img.width;
       image.height = img.height;
@@ -1062,7 +1060,7 @@ export default class Parser {
       if (typeof rotation !== 'undefined')
         image.bits = rotateHDR(image, rotation);
     } else {
-      const img = await Parser.loadImage(url);
+      const img = await ProtoParser.loadImage(url);
       canvas2.width = img.width;
       canvas2.height = img.height;
       if (typeof rotation !== 'undefined') {
