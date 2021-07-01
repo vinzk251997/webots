@@ -39,6 +39,8 @@ import DefaultUrl from './DefaultUrl.js';
 import loadHdr from './hdr_loader.js';
 import {webots} from './webots.js';
 
+import WbTokenizer from './WbTokenizer.js';
+
 /*
   This module takes an x3d world, parse it and populate the scene.
 */
@@ -91,6 +93,12 @@ export default class ProtoParser {
     const background = new WbBackground(getAnId(), skyColor);
     WbWorld.instance.sceneTree.push(background);
     WbWorld.instance.sceneTree.push(shape);
+
+
+    const protoBody = '  Shape {\n  geometry Box {\n size 1 1 1\n name "solid"\n children [ \n radius 1 2 # its comment \n    ]\n }\n }\n';
+    const tokenizer = new WbTokenizer(protoBody);
+    const tokens = tokenizer.tokenize();
+    console.log(tokens);
 
     if (document.getElementById('webotsProgressMessage'))
       document.getElementById('webotsProgressMessage').innerHTML = 'Finalizing...';
