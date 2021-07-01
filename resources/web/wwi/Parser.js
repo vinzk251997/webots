@@ -1167,4 +1167,4 @@ function rotateHDR(image, rotate) {
   return rotatedbits;
 }
 
-export {convertStringToVec3, convertStringToQuaternion};
+export {convertStringToVec2, convertStringToVec3, convertStringToQuaternion};
