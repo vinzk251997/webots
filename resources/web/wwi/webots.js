@@ -126,12 +126,17 @@ webots.View = class View {
     this.x3dScene = new X3dScene(this._x3dDiv);
     this.x3dScene.init('');
 
-    this.x3dScene.loadProtoFile(this.url);
+    const finalizeWorld = () => {
+      if (document.getElementById('webotsProgressMessage'))
+        document.getElementById('webotsProgressMessage').innerHTML = 'Loading World...';
+    };
 
     if (typeof this.x3dScene !== 'undefined' && typeof this.mouseEvents === 'undefined') {
       let canvas = document.getElementById('canvas');
       this.mouseEvents = new MouseEvents(this.x3dScene, canvas, this._mobileDevice);
     }
+
+    this.x3dScene.loadProtoFile(this.url, finalizeWorld);
   }
 
   open(url, mode, texturePathPrefix = '') {

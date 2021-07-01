@@ -100,7 +100,7 @@ export default class X3dScene {
     this.render();
   }
 
-  loadProtoFile(url) {
+  loadProtoFile(url, onLoad) {
     const renderer = this.renderer;
 
     const xmlhttp = new XMLHttpRequest();
@@ -111,6 +111,7 @@ export default class X3dScene {
         const loader = new ProtoParser('');
         //const loader = new Parser('');
         await loader.parse(xmlhttp.responseText, renderer);
+        onLoad();
       }
     };
     xmlhttp.send();

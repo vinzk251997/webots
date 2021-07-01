@@ -78,6 +78,7 @@ export default class Parser {
     WbWorld.instance.viewpoint.finalize();
 
     WbWorld.instance.sceneTree.forEach(node => {
+      console.log(node)
       node.finalize();
     });
 
