@@ -46,7 +46,7 @@ class ProtoDesigner {
 
     // this.renderer = new WrenRenderer();
     const view = new webots.View(document.getElementById('view3d'));
-    view.openProto('test.x3d');
+    view.openProto('../wwi/Protos/ProtoBox.proto');
     //view.open('test.x3d');
   }
 }

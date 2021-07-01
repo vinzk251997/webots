@@ -109,7 +109,6 @@ export default class X3dScene {
     xmlhttp.onreadystatechange = async function() {
       if (xmlhttp.readyState === 4 && (xmlhttp.status === 200 || xmlhttp.status === 0)) { // Some browsers return HTTP Status 0 when using non-http protocol (for file://)
         const loader = new ProtoParser('');
-        //const loader = new Parser('');
         await loader.parse(xmlhttp.responseText, renderer);
         onLoad();
       }

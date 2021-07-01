@@ -74,6 +74,24 @@ export default class ProtoParser {
     WbWorld.instance.sceneTree.push(shape);
     */
 
+    //console.log(text);
+
+    //const protoName = text.match(/(?<=PROTO\s)(\w+)(?=\s\[)/g)[0];
+    //console.log(protoName)
+
+    const indexBeginHeader = text.search(/(?<=\n|\n\r)(PROTO)(?=\s\w+\s\[)/g);
+    const indexBeginBody = text.search(/(?<=\]\s*\n*\r*)({)/g);
+
+    const protoHeader = text.substring(indexBeginHeader, indexBeginBody -1 )
+    const protoBody = text.substring(indexBeginBody);
+    console.log('Header: \n' + protoHeader)
+    console.log('Body: \n' + protoBody)
+
+    const tokens = protoBody.split(/[\s|\n|\n\r]/);
+
+    console.log(tokens)
+
+
     if (document.getElementById('webotsProgressMessage'))
       document.getElementById('webotsProgressMessage').innerHTML = 'Finalizing...';
 

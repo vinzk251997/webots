@@ -121,8 +121,6 @@ webots.View = class View {
     this._x3dDiv = document.getElementById('view3d');
     this._x3dDiv.className = 'webots3DView';
 
-    console.log('openProto: height ' + this._x3dDiv.clientHeight + ' width ' + this._x3dDiv.clientWidth);
-
     this.x3dScene = new X3dScene(this._x3dDiv);
     this.x3dScene.init('');
 
