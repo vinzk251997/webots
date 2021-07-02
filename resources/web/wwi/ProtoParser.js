@@ -40,6 +40,7 @@ import loadHdr from './hdr_loader.js';
 import {webots} from './webots.js';
 
 import Parser from './Parser.js';
+import WbTokenizer from './WbTokenizer.js';
 
 /*
   This module takes an x3d world, parse it and populate the scene.
@@ -84,13 +85,13 @@ export default class ProtoParser {
 
     const protoHeader = text.substring(indexBeginHeader, indexBeginBody -1 )
     const protoBody = text.substring(indexBeginBody);
+    const protoBody = '  Shape {\n  geometry Box {\n size 1 1 1\n name "solid"\n children [ \n radius 1 2 # its comment \n    ]\n }\n }\n';
     console.log('Header: \n' + protoHeader)
     console.log('Body: \n' + protoBody)
 
-    const tokens = protoBody.split(/[\s|\n|\n\r]/);
-
-    console.log(tokens)
-
+    const tokenizer = new WbTokenizer(protoBody);
+    const tokens = tokenizer.tokenize();
+    console.log(tokens);
 
     if (document.getElementById('webotsProgressMessage'))
       document.getElementById('webotsProgressMessage').innerHTML = 'Finalizing...';
