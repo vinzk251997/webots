@@ -2,7 +2,6 @@ import WbToken, {isSpace, isPunctuation} from './WbToken.js';
 
 export default class WbTokenizer {
   constructor(stream) {
-    this._index = 0;
     this._char = '';
     this._vector = [];
     this._stream = stream;
@@ -12,6 +11,8 @@ export default class WbTokenizer {
     this._tokenLine = 1;
     this._tokenColumn = -1;
     this._atEndPos = false;
+    // control position in token vector
+    this._index = 0;
   }
 
   tokenize() {
@@ -22,9 +23,10 @@ export default class WbTokenizer {
         this._vector.push(token);
       }
     } catch (e) {
-      console.error(e.message);
     }
 
+    // add EOF token
+    this._vector.push(new WbToken('end of file', this._tokenLine, this._tokenColumn));
     return this._vector;
   };
 
@@ -41,13 +43,12 @@ export default class WbTokenizer {
   };
 
   readChar() {
-    console.log(this._atEnd())
     if (this._atEnd()) {
       if (!this._atEndPos) {
         this._atEndPos = true;
         return '\n';
       }
-      throw new Error('attempting to readChar beyond the end of the stream');
+      throw new Error();
     }
 
     const c = this._stream[this._streamPos];
@@ -75,7 +76,6 @@ export default class WbTokenizer {
     this.skipWhiteSpace();
 
     let word = this._char;
-    console.log('starting word with letter: ' + word)
     this._markTokenStart();
 
     // handle string literals
@@ -118,6 +118,46 @@ export default class WbTokenizer {
     }
 
     return word;
+  };
+
+  rewind() {
+    this._index = 0;
+  };
+
+  forward() {
+    this._index = this._vector.length;
+  };
+
+  ungetToken() {
+    --this._index;
+  };
+
+  pos() {
+    return this._index;
+  }
+
+  seek(pos) {
+    this._index = pos;
+  };
+
+  lastToken() {
+    return this._index > 0 ? this._vector[this._index - 1] : undefined;
+  };
+
+  nextToken() {
+    return this._vector(this._index++);
+  };
+
+  peekToken() {
+    return this._vector(this._index);
+  };
+
+  hasMoreTokens() {
+    return this._index < this._vector.length;
+  };
+
+  totalTokensNumber() {
+    return this._vector.length;
   };
 
   _markTokenStart() {

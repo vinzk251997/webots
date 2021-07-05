@@ -7,7 +7,9 @@ export default class WbToken {
     const w0 = word[0];
     const NUMERIC_CHARS = '+-0123456789.';
 
-    if (word.startsWith('"') && word.endsWith('"'))
+    if (word === 'end of file')
+      this.type = WbToken.TYPES.END;
+    else if (word.startsWith('"') && word.endsWith('"'))
       this.type = WbToken.TYPES.STRING;
     else if (word.startsWith('%<') && word.endsWith('>%'))
       this.type = WbToken.TYPES.TEMPLATE_STATEMENT;

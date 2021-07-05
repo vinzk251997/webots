@@ -41,6 +41,7 @@ import {webots} from './webots.js';
 
 import Parser from './Parser.js';
 import WbTokenizer from './WbTokenizer.js';
+import WbNodeReader from './WbNodeReader.js';
 
 /*
   This module takes an x3d world, parse it and populate the scene.
@@ -85,7 +86,7 @@ export default class ProtoParser {
 
     const protoHeader = text.substring(indexBeginHeader, indexBeginBody -1 )
     const protoBody = text.substring(indexBeginBody);
-    const protoBody = '  Shape {\n  geometry Box {\n size 1 1 1\n name "solid"\n children [ \n radius 1 2 # its comment \n    ]\n }\n }\n';
+    //const protoBody = '  Shape {\n  geometry Box {\n size 1 1 1\n name "solid"\n children [ \n radius 1 2 # its comment \n    ]\n }\n }\n';
     console.log('Header: \n' + protoHeader)
     console.log('Body: \n' + protoBody)
 
