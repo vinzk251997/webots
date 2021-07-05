@@ -144,12 +144,20 @@ export default class WbTokenizer {
     return this._index > 0 ? this._vector[this._index - 1] : undefined;
   };
 
+  lastWord() {
+    return this.lastToken().word();
+  };
+
   nextToken() {
-    return this._vector(this._index++);
+    return this._vector[this._index++];
+  };
+
+  nextWord() {
+    return this.nextToken().word();
   };
 
   peekToken() {
-    return this._vector(this._index);
+    return this._vector[this._index];
   };
 
   hasMoreTokens() {

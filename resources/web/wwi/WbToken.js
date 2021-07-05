@@ -25,6 +25,18 @@ export default class WbToken {
       this.type = WbToken.TYPES.INVALID;
   };
 
+  word() {
+    return this._word;
+  };
+
+  line() {
+    return this._line;
+  };
+
+  column() {
+    return this._column;
+  };
+
   _isKeyword(word) {
     return WbToken.KEYWORDS.includes(word);
   };

@@ -39,9 +39,10 @@ import DefaultUrl from './DefaultUrl.js';
 import loadHdr from './hdr_loader.js';
 import {webots} from './webots.js';
 
-import Parser from './Parser.js';
+//import WbParser from './WbParser.js';
 import WbTokenizer from './WbTokenizer.js';
-import WbNodeReader from './WbNodeReader.js';
+//  import WbNodeReader from './WbNodeReader.js';
+import WbConcreteNodeFactory from './WbConcreteNodeFactory.js';
 
 /*
   This module takes an x3d world, parse it and populate the scene.
@@ -93,6 +94,14 @@ export default class ProtoParser {
     const tokenizer = new WbTokenizer(protoBody);
     const tokens = tokenizer.tokenize();
     console.log(tokens);
+    
+    tokenizer.rewind();
+    tokenizer.nextToken(); // skip '{'
+    const modelName = tokenizer.nextWord();
+    console.log('modelName: ' + modelName);
+
+    let nodeFactory = new WbConcreteNodeFactory();
+    nodeFactory.createNode(modelName, tokenizer);
 
     if (document.getElementById('webotsProgressMessage'))
       document.getElementById('webotsProgressMessage').innerHTML = 'Finalizing...';
