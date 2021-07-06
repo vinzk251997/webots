@@ -330,7 +330,7 @@ resources/web/
 resources/web/local/
 resources/web/local/webots.css
 resources/web/local/webots.js
-resources/web/local/qwebchannel.js [mac,linux]
+resources/web/local/qwebchannel.js
 resources/web/server/
 resources/web/server/async_process.py
 resources/web/server/server.sh
