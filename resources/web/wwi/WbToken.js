@@ -25,16 +25,50 @@ export default class WbToken {
       this.type = WbToken.TYPES.INVALID;
   };
 
-  word() {
-    return this._word;
+  word() { return this._word; };
+  line() { return this._line; };
+  column() { return this._column; };
+
+  isValid() { return this._type !== WbToken.TYPES.INVALID; };
+  isString() { return this._type === WbToken.TYPES.STRING; }
+  isIdentifier() { return this._type === WbToken.TYPES.IDENTIFIER; }
+  isKeyword() { return this._type === WbToken.TYPES.KEYWORD; }
+  isNumeric() { return this._type === WbToken.TYPES.NUMERIC; }
+  isPunctuation() { return this._type === WbToken.TYPES.PUNCTUATION; }
+  isBoolean() { return this._type === WbToken.TYPES.KEYWORD && (this._word === 'TRUE' || this._word === 'FALSE'); }
+  isTemplateStatement() { return this._type === WbToken.TYPES.TEMPLATE_STATEMENT; }
+  isEof() { return this._type === WbToken.TYPES.END; }
+
+  toString() {
+    if (!this.isString())
+      throw new Error('Expected STRING type token but is not.');
+
+    return this._word.replace('"', '');
   };
 
-  line() {
-    return this._line;
+  toInt() {
+    if (!this.isNumeric())
+      throw new Error('Expected NUMERIC type token but is not.');
+
+    return parseInt(this._word);
   };
 
-  column() {
-    return this._column;
+  toDouble() {
+    return this.toFloat();
+  }
+
+  toFloat() {
+    if (!this.isNumeric())
+      throw new Error('Expected NUMERIC type token but is not.');
+
+    return parseFloat(this._word);
+  };
+
+  toBool() {
+    if (!this.isBoolean())
+      throw new Error('Expected boolean KEYWORD type token but is not.');
+
+    return this._word === 'TRUE';
   };
 
   _isKeyword(word) {

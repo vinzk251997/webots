@@ -160,12 +160,26 @@ export default class WbTokenizer {
     return this._vector[this._index];
   };
 
+  peekWord() {
+    return this.peekToken().word();
+  };
+
   hasMoreTokens() {
     return this._index < this._vector.length;
   };
 
   totalTokensNumber() {
     return this._vector.length;
+  };
+
+  skipToken(expectedWord) {
+    if (!this.hasMoreTokens())
+      throw new Error('Expected word ' + expectedWord + ' but reached end of file.');
+
+    const token = this.nextToken();
+
+    if (token.word() !== expectedWord)
+      throw new Error('Expected word ' + expectedWord + ' but found ' + token.word() + '.');
   };
 
   _markTokenStart() {

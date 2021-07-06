@@ -4,6 +4,7 @@ export default class WbNode {
   constructor(modelName, tokenizer) {
     console.log('constructor WbNode');
 
-    this._model = new WbNodeModel(modelName);
+    const nodeModel = new WbNodeModel(modelName);
+    console.log(nodeModel);
   }
 };

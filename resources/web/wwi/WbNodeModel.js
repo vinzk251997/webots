@@ -1,22 +1,34 @@
 import WbTokenizer from './WbTokenizer.js';
+import WbFieldModel from './WbFieldModel.js';
 
 export default class WbNodeModel {
   constructor(modelName) {
     console.log('constructor WbNodeModel');
 
+    this._fieldModels = [];
+
     const wrlFileName = '../../nodes/' + modelName + '.wrl';
-    console.log('wrlFileName: ' + wrlFileName);
 
-    const tokens = readModel();
-    console.log(tokens);
+    const request = new XMLHttpRequest();
+    request.open('GET', wrlFileName, false); // 'false' makes the request synchronous
+    request.send(null);
+
+    if (request.readyState === 4 && (request.status === 200 || request.status === 0)) {
+      console.log(request.responseText);
+      const tokenizer = new WbTokenizer(request.responseText);
+      tokenizer.tokenize();
+
+      tokenizer.rewind();
+      tokenizer.skipToken(modelName);
+      tokenizer.skipToken('{');
+
+      while (tokenizer.peekWord() !== '}') {
+        const model = new WbFieldModel(tokenizer);
+        // fieldModel.ref();
+        this._fieldModels.push(model);
+      }
+
+      tokenizer.skipToken('}'); // ensure file ends correctly
+    }
   };
-
-  readModel(model) {
-    const tokenizer = new WbTokenizer(model);
-    return tokenizer.tokenize();
-  };
-
-  loadWrl(fileContent) {
-    return fileContent;
-  }
 };
