@@ -8,21 +8,21 @@ export default class WbToken {
     const NUMERIC_CHARS = '+-0123456789.';
 
     if (word === 'end of file')
-      this.type = WbToken.TYPES.END;
+      this._type = WbToken.TYPES.END;
     else if (word.startsWith('"') && word.endsWith('"'))
-      this.type = WbToken.TYPES.STRING;
+      this._type = WbToken.TYPES.STRING;
     else if (word.startsWith('%<') && word.endsWith('>%'))
-      this.type = WbToken.TYPES.TEMPLATE_STATEMENT;
+      this._type = WbToken.TYPES.TEMPLATE_STATEMENT;
     else if (NUMERIC_CHARS.includes(w0))
-      this.type = isNaN(Number(word)) ? WbToken.TYPES.INVALID : WbToken.TYPES.NUMERIC;
-    else if (this._isKeyword(word))
-      this.type = WbToken.TYPES.KEYWORD;
+      this._type = isNaN(Number(word)) ? WbToken.TYPES.INVALID : WbToken.TYPES.NUMERIC;
+    else if (this._isKeywordType(word))
+      this._type = WbToken.TYPES.KEYWORD;
     else if (this._isValidIdentifier(word))
-      this.type = WbToken.TYPES.IDENTIFIER;
+      this._type = WbToken.TYPES.IDENTIFIER;
     else if (word.length === 1 && isPunctuation(w0))
-      this.type = WbToken.TYPES.PUNCTUATION;
+      this._type = WbToken.TYPES.PUNCTUATION;
     else
-      this.type = WbToken.TYPES.INVALID;
+      this._type = WbToken.TYPES.INVALID;
   };
 
   word() { return this._word; };
@@ -71,7 +71,7 @@ export default class WbToken {
     return this._word === 'TRUE';
   };
 
-  _isKeyword(word) {
+  _isKeywordType(word) {
     return WbToken.KEYWORDS.includes(word);
   };
 
@@ -95,7 +95,7 @@ export default class WbToken {
         return false;
     }
 
-    return !this._isKeyword(word);
+    return !this._isKeywordType(word);
   };
 };
 

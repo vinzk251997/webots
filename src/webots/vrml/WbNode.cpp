@@ -930,7 +930,7 @@ void WbNode::readFields(WbTokenizer *tokenizer, const QString &worldPath) {
     const QString &w(tokenizer->nextWord());
     WbField *const field = findField(w);
     if (!field)
-      tokenizer->skipField();
+      tokenizer->skipField(false);
     else {
       if (tokenizer->peekWord() == "IS") {
         tokenizer->skipToken("IS");

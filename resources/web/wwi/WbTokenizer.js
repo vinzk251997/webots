@@ -27,6 +27,9 @@ export default class WbTokenizer {
 
     // add EOF token
     this._vector.push(new WbToken('end of file', this._tokenLine, this._tokenColumn));
+  };
+
+  tokens() {
     return this._vector;
   };
 
@@ -180,6 +183,94 @@ export default class WbTokenizer {
 
     if (token.word() !== expectedWord)
       throw new Error('Expected word ' + expectedWord + ' but found ' + token.word() + '.');
+  };
+
+  skipField(deleteTokens) {
+    if (!this.hasMoreTokens())
+      throw new Error('End of file reached while a token is expected.');
+
+    // skip node
+    if (this.peekWord() === 'USE' || this.peekWord() === 'IS') {
+      if (deleteTokens) {
+        --this._index;
+        this._vector.splice(this._index, 3);
+      } else {
+        this.nextToken();
+        this.nextToken();
+      }
+      return;
+    }
+
+    // skip node
+    if (this.peekToken().isIdentifier() || this.peekWord() === 'DEF') {
+      this.skipNode(deleteTokens);
+      // remove field name
+      --this._index;
+      this._vector.splice(this._index, 1);
+      return;
+    }
+
+    // skip unknown multiple value
+    if (this.peekWord() === '[') {
+      const startPos = this._index - 1;
+      this.nextToken();
+      let counter = 1;
+      do {
+        const word = this.nextWord();
+        if (word === '[')
+          counter++;
+        else if (word === ']')
+          counter--;
+      } while (counter > 0);
+
+      if (deleteTokens) {
+        this._vector.splice(startPos, this._index - startPos);
+        this._index = startPos;
+      }
+
+      return;
+    }
+
+    // skip unknown single value
+    const startPos = this._index - 1;
+    while (this.peekToken().isNumeric() || this.peekToken().isString() || this.peekToken().isBoolean())
+      this.nextToken();
+
+    if (deleteTokens) {
+      this._vector.splice(startPos, this._index - startPos);
+      this._index = startPos;
+    }
+  };
+
+  skipNode(deleteTokens) {
+    let startPos = this._index;
+    if (deleteTokens && this.peekWord() === '{')
+      --startPos; // delete node name
+
+    // move to next "{"
+    while (this.hasMoreTokens() && this.nextWord() !== '{') {
+    }
+
+    if (this.lastToken().isEof()) {
+      this.ungetToken();
+      return;
+    }
+
+    // count the same number of opening and closing braces
+    let counter = 1;
+    while (counter > 0 && this.hasMoreTokens()) {
+      const word = this.nextWord();
+      if (word === '{')
+        counter++;
+      else if (word === '}')
+        counter--;
+    }
+
+    if (deleteTokens) {
+      const count = this._index - startPos;
+      this._vector.splice(startPos, count);
+      this._index = startPos;
+    }
   };
 
   _markTokenStart() {

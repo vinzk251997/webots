@@ -111,6 +111,8 @@ export default class WbFieldModel {
     */
   };
 
+  defaultValue() { return this._defaultValue; };
+
   hasRestrictedValues() {
     return typeof this._acceptedValues !== 'undefined' && this._acceptedValues.length > 0;
   };

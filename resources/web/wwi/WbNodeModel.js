@@ -4,7 +4,6 @@ import WbFieldModel from './WbFieldModel.js';
 export default class WbNodeModel {
   constructor(modelName) {
     console.log('constructor WbNodeModel');
-
     this._fieldModels = [];
 
     const wrlFileName = '../../nodes/' + modelName + '.wrl';
@@ -17,6 +16,7 @@ export default class WbNodeModel {
       console.log(request.responseText);
       const tokenizer = new WbTokenizer(request.responseText);
       tokenizer.tokenize();
+      console.log(tokenizer.tokens());
 
       tokenizer.rewind();
       tokenizer.skipToken(modelName);
@@ -30,5 +30,9 @@ export default class WbNodeModel {
 
       tokenizer.skipToken('}'); // ensure file ends correctly
     }
+  };
+
+  fieldModels() {
+    return this._fieldModels;
   };
 };

@@ -92,8 +92,8 @@ export default class ProtoParser {
     console.log('Body: \n' + protoBody)
 
     const tokenizer = new WbTokenizer(protoBody);
-    const tokens = tokenizer.tokenize();
-    console.log(tokens);
+    tokenizer.tokenize();
+    console.log(tokenizer.tokens());
     
     tokenizer.rewind();
     tokenizer.nextToken(); // skip '{'
