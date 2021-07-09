@@ -248,6 +248,7 @@ WrShaderProgram *WbWrenShaders::defaultShader() {
 }
 
 WrShaderProgram *WbWrenShaders::depthOfFieldShader() {
+  printf("WbWrenShaders::depthOfFieldShader\n");
   if (!gShaders[SHADER_DEPTH_OF_FIELD]) {
     gShaders[SHADER_DEPTH_OF_FIELD] = wr_shader_program_new();
 

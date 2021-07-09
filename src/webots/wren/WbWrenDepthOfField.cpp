@@ -92,7 +92,7 @@ void WbWrenDepthOfField::setDepthOfFieldParams(float minLength, float focalLengt
 void WbWrenDepthOfField::applyParametersToWren() {
   if (!mWrenPostProcessingEffect)
     return;
-
+  printf("applying to wren\n");
   wr_post_processing_effect_pass_set_program_parameter(
     wr_post_processing_effect_get_pass(mWrenPostProcessingEffect, "LensFocus_Dof"), "cameraParams",
     reinterpret_cast<const char *>(&mCameraParams));

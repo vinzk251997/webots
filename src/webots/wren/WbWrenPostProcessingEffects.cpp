@@ -180,6 +180,7 @@ WrPostProcessingEffect *WbWrenPostProcessingEffects::depthOfField(float width, f
                                                                   float depthOfFieldTextureHeight,
                                                                   WrTextureInternalFormat textureFormat,
                                                                   WrTexture *colorTexture, WrTexture *depthTexture) {
+  printf("WbWrenPostProcessingEffects::depthOfField\n");
   WrPostProcessingEffect *depthOfField = wr_post_processing_effect_new();
   wr_post_processing_effect_set_drawing_index(depthOfField, WbWrenRenderingContext::PP_DEPTH_OF_FIELD);
   WrPostProcessingEffectPass *blurPass = wr_post_processing_effect_pass_new();
@@ -199,6 +200,7 @@ WrPostProcessingEffect *WbWrenPostProcessingEffects::depthOfField(float width, f
   wr_post_processing_effect_pass_set_input_texture_wrap_mode(blurPass, 1, WR_TEXTURE_WRAP_MODE_CLAMP_TO_EDGE);
 
   WrPostProcessingEffectPass *dofPass = wr_post_processing_effect_pass_new();
+  printf("WrPostProcessingEffectPass %f ||| %f %f \n", WbWrenShaders::depthOfFieldShader(), width, height);
   wr_post_processing_effect_pass_set_name(dofPass, "LensFocus_Dof");
   wr_post_processing_effect_pass_set_program(dofPass, WbWrenShaders::depthOfFieldShader());
   wr_post_processing_effect_pass_set_output_size(dofPass, width, height);

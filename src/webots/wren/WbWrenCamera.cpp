@@ -218,6 +218,7 @@ void WbWrenCamera::setMotionBlur(float blur) {
 }
 
 void WbWrenCamera::setFocus(float distance, float length) {
+  printf("WbWrenCamera: setting focus %f %f\n", distance, length);
   if (mIsSpherical || (distance == mFocusDistance && length == mFocusLength))
     return;
 
@@ -226,8 +227,9 @@ void WbWrenCamera::setFocus(float distance, float length) {
 
   mFocusDistance = distance;
   mFocusLength = length;
-
+  printf("set\n");
   if (hasStatusChanged) {
+    printf("cleanup\n");
     cleanup();
     init();
   }
@@ -764,6 +766,7 @@ void WbWrenCamera::setupSphericalSubCameras() {
 }
 
 void WbWrenCamera::setupCameraPostProcessing(int index) {
+  printf("WbWrenCamera::setupCameraPostProcessing\n");
   assert(index >= 0 && index < CAMERA_ORIENTATION_COUNT && mIsCameraActive[index]);
 
   if (mBloomThreshold != -1.0f && mType == 'c')
@@ -870,6 +873,7 @@ void WbWrenCamera::setAspectRatio(float aspectRatio) {
 }
 
 void WbWrenCamera::updatePostProcessingParameters(int index) {
+  printf("WbWrenCamera::updatePostProcessingParameters\n");
   assert(index >= 0 && index < CAMERA_ORIENTATION_COUNT && mIsCameraActive[index]);
 
   if (mWrenHdr[index]->hasBeenSetup())
@@ -895,6 +899,8 @@ void WbWrenCamera::updatePostProcessingParameters(int index) {
   }
 
   if (mFocusDistance > 0.0f && mFocusLength > 0.0f) {
+    printf("updating %f %f | %f %f %f %f\n", wr_camera_get_near(mCamera[index]), wr_camera_get_far(mCamera[index]),
+           mFocusDistance - mFocusLength, mFocusDistance, mFocusDistance + mFocusLength, DOF_FAR_BLUR_CUTOFF);
     mWrenDepthOfField[index]->setCameraParams(wr_camera_get_near(mCamera[index]), wr_camera_get_far(mCamera[index]));
     mWrenDepthOfField[index]->setDepthOfFieldParams(mFocusDistance - mFocusLength, mFocusDistance,
                                                     mFocusDistance + mFocusLength, DOF_FAR_BLUR_CUTOFF);

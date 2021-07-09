@@ -1114,10 +1114,13 @@ void WbCamera::updateFrustumDisplayIfNeeded(int optionalRendering) {
 
 void WbCamera::applyFocalSettingsToWren() {
   if (hasBeenSetup()) {
-    if (focus())
+    if (focus()) {
+      printf("setting %f %f\n", focus()->focalDistance(), focus()->focalLength());
       mWrenCamera->setFocus(focus()->focalDistance(), focus()->focalLength());
-    else
+    } else {
+      printf("setting %f %f\n", 0.0, 0.0);
       mWrenCamera->setFocus(0.0, 0.0);
+    }
     mNeedToConfigure = true;
   }
 }
