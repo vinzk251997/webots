@@ -42,10 +42,7 @@
 #include "WbWrenRenderingContext.hpp"
 #include "WbWrenShaders.hpp"
 #include "WbWrenSmaa.hpp"
-
-#ifdef _WIN32
 #include "WbVirtualRealityHeadset.hpp"
-#endif
 
 #include <wren/camera.h>
 #include <wren/node.h>
@@ -135,7 +132,6 @@ void WbViewpoint::init() {
     }
   }
 
-#ifdef _WIN32
   if (WbPreferences::instance()->value("VirtualRealityHeadset/enable").toBool()) {
     mVirtualRealityHeadset = WbVirtualRealityHeadset::instance();
     if (!mVirtualRealityHeadset || !mVirtualRealityHeadset->isValid())
@@ -144,7 +140,6 @@ void WbViewpoint::init() {
       connect(mVirtualRealityHeadset, &WbVirtualRealityHeadset::renderRequired, this,
               &WbViewpoint::virtualRealityHeadsetRequiresRender);
   }
-#endif
 }
 
 WbViewpoint::WbViewpoint(WbTokenizer *tokenizer) : WbBaseNode("Viewpoint", tokenizer) {
@@ -208,10 +203,8 @@ void WbViewpoint::postFinalize() {
 }
 
 void WbViewpoint::deleteWrenObjects() {
-#ifdef _WIN32
   if (mVirtualRealityHeadset)
     mVirtualRealityHeadset->deleteWrenObjects();
-#endif
 
   if (lensFlare())
     lensFlare()->detachFromViewport();
@@ -348,10 +341,8 @@ void WbViewpoint::updateFollowType() {
 void WbViewpoint::updateLensFlare() {
   if (lensFlare() && areWrenObjectsInitialized()) {
     lensFlare()->setup(mWrenViewport);
-#ifdef _WIN32
     if (mVirtualRealityHeadset)
       mVirtualRealityHeadset->setupLensFlare(lensFlare());
-#endif
   }
 }
 
@@ -498,11 +489,9 @@ void WbViewpoint::lookAt(const WbVector3 &target, const WbVector3 &upVector) {
 void WbViewpoint::createWrenObjects() {
   WbBaseNode::createWrenObjects();
 
-#ifdef _WIN32
   if (mVirtualRealityHeadset)
     mVirtualRealityHeadset->createWrenObjects(wrenNode(),
                                               WbPreferences::instance()->value("VirtualRealityHeadset/antiAliasing").toBool());
-#endif
 
   connect(WbWrenRenderingContext::instance(), &WbWrenRenderingContext::optionalRenderingChanged, this,
           &WbViewpoint::updateOptionalRendering);
@@ -622,14 +611,12 @@ void WbViewpoint::updateExposure() {
   if (WbFieldChecker::resetDoubleIfNegative(this, mExposure, 1.0))
     return;
 
-#ifdef _WIN32
   if (mVirtualRealityHeadset) {
     if (mVirtualRealityHeadset->leftEyeHdr())
       mVirtualRealityHeadset->leftEyeHdr()->setExposure(mExposure->value());
     if (mVirtualRealityHeadset->rightEyeHdr())
       mVirtualRealityHeadset->rightEyeHdr()->setExposure(mExposure->value());
   }
-#endif
 
   if (areWrenObjectsInitialized() && mWrenHdr)
     mWrenHdr->setExposure(mExposure->value());
@@ -840,10 +827,8 @@ void WbViewpoint::applyFieldOfViewToWren() {
 }
 
 void WbViewpoint::applyOrientationToWren() {
-#ifdef _WIN32
   if (mVirtualRealityHeadset)
     mVirtualRealityHeadset->setOrientation(mOrientation->value());
-#endif
 
   float angleAxis[] = {static_cast<float>(mOrientation->angle()), static_cast<float>(mOrientation->x()),
                        static_cast<float>(mOrientation->y()), static_cast<float>(mOrientation->z())};
@@ -851,10 +836,8 @@ void WbViewpoint::applyOrientationToWren() {
 }
 
 void WbViewpoint::applyPositionToWren() {
-#ifdef _WIN32
   if (mVirtualRealityHeadset)
     mVirtualRealityHeadset->setPosition(mPosition->value());
-#endif
 
   float position[] = {static_cast<float>(mPosition->x()), static_cast<float>(mPosition->y()),
                       static_cast<float>(mPosition->z())};
@@ -862,23 +845,19 @@ void WbViewpoint::applyPositionToWren() {
 }
 
 void WbViewpoint::applyNearToWren() {
-#ifdef _WIN32
   if (mVirtualRealityHeadset)
     mVirtualRealityHeadset->setNear(mNear->value());
-#endif
 
   wr_camera_set_near(mWrenCamera, mNear->value());
 }
 
 void WbViewpoint::applyFarToWren() {
-#ifdef _WIN32
   if (mVirtualRealityHeadset) {
     if (mFar->value() > 0.0)
       mVirtualRealityHeadset->setFar(mFar->value());
     else
       mVirtualRealityHeadset->setFar(DEFAULT_FAR);
   }
-#endif
 
   if (mFar->value() > 0.0)
     wr_camera_set_far(mWrenCamera, mFar->value());
@@ -1102,7 +1081,6 @@ double WbViewpoint::zEye(const WbVector3 &pos) const {
 }
 
 bool WbViewpoint::enableVirtualRealityHeadset(bool enable) {
-#ifdef _WIN32
   if (enable && !mVirtualRealityHeadset) {
     mVirtualRealityHeadset = WbVirtualRealityHeadset::instance();
     if (!mVirtualRealityHeadset || !mVirtualRealityHeadset->isValid()) {
@@ -1124,13 +1102,9 @@ bool WbViewpoint::enableVirtualRealityHeadset(bool enable) {
     mVirtualRealityHeadset = NULL;
   }
   return true;
-#else
-  return false;
-#endif
 }
 
 void WbViewpoint::setVirtualRealityHeadsetAntiAliasing(bool enable) {
-#ifdef _WIN32
   if (mVirtualRealityHeadset) {
     deleteWrenObjects();
     mVirtualRealityHeadset->createWrenObjects(wrenNode(), enable);
@@ -1142,7 +1116,6 @@ void WbViewpoint::setVirtualRealityHeadsetAntiAliasing(bool enable) {
     connect(mVirtualRealityHeadset, &WbVirtualRealityHeadset::renderRequired, this,
             &WbViewpoint::virtualRealityHeadsetRequiresRender);
   }
-#endif
 }
 
 void WbViewpoint::updatePostProcessingEffects() {

@@ -40,8 +40,8 @@
 #include <wren/transform.h>
 #include <wren/viewport.h>
 
-#include <openvr.h>
-#include <openvr_capi.h>
+#include <openvr/openvr.h>
+#include <openvr/openvr_capi.h>
 
 #include <QtCore/QFile>
 #include <QtCore/QStandardPaths>

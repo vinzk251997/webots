@@ -46,10 +46,7 @@
 #include "WbWorld.hpp"
 #include "WbWrenLabelOverlay.hpp"
 #include "WbWrenOpenGlContext.hpp"
-
-#ifdef _WIN32
 #include "WbVirtualRealityHeadset.hpp"
-#endif
 
 #include "../../../include/controller/c/webots/supervisor.h"
 #include "../../controller/c/messages.h"
@@ -1610,28 +1607,20 @@ void WbSupervisorUtilities::handleMessage(QDataStream &stream) {
       return;
     }
     case C_SUPERVISOR_VIRTUAL_REALITY_HEADSET_GET_POSITION: {
-#ifdef _WIN32
       if (!WbVirtualRealityHeadset::isInUse())
-#endif
         mRobot->warn(tr(
           "wb_supervisor_virtual_reality_headset_get_position() called but no virtual reality headset is currently in use."));
-#ifdef _WIN32
       else if (WbVirtualRealityHeadset::instance()->isPositionTrackingEnabled())
         mVirtualRealityHeadsetPositionRequested = true;
-#endif
       return;
     }
     case C_SUPERVISOR_VIRTUAL_REALITY_HEADSET_GET_ORIENTATION: {
-#ifdef _WIN32
       if (!WbVirtualRealityHeadset::isInUse())
-#endif
         mRobot->warn(
           tr("wb_supervisor_virtual_reality_headset_get_orientation() called but no virtual reality headset is currently in "
              "use."));
-#ifdef _WIN32
       else if (WbVirtualRealityHeadset::instance()->isOrientationTrackingEnabled())
         mVirtualRealityHeadsetOrientationRequested = true;
-#endif
       return;
     }
     default:

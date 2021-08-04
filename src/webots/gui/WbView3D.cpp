@@ -67,10 +67,7 @@
 #include "WbWrenPicker.hpp"
 #include "WbWrenRenderingContext.hpp"
 #include "WbWrenTextureOverlay.hpp"
-
-#ifdef _WIN32
 #include "WbVirtualRealityHeadset.hpp"
-#endif
 
 #include <QtCore/QTime>
 #include <QtGui/QKeyEvent>
@@ -1068,14 +1065,12 @@ void WbView3D::setWorld(WbSimulationWorld *w) {
   else
     showBlackRenderingOverlay();
 
-#ifdef _WIN32
   // Creates the virtual reality headset overlay
   if (!mVirtualRealityHeadsetOverlay) {
     mVirtualRealityHeadsetOverlay = new WbWrenFullScreenOverlay("Headset preview disabled", 64, false);
     mVirtualRealityHeadsetOverlay->attachToViewport(wr_scene_get_viewport(wr_scene_get_instance()));
   }
   updateVirtualRealityHeadsetOverlay();
-#endif
 
   // connect supervisor scene tree modifications to graphical updates
   const QList<WbRobot *> &robots = mWorld->robots();
@@ -1403,7 +1398,6 @@ void WbView3D::renderNow(bool culling) {
 
   if (mWorld) {
     emit mainRenderingStarted(mPhysicsRefresh);
-#ifdef _WIN32
     if (WbVirtualRealityHeadset::isInUse()) {
       WbVirtualRealityHeadset::instance()->updateOrientationAndPosition();
       WbWrenOpenGlContext::makeWrenCurrent();
@@ -1416,7 +1410,6 @@ void WbView3D::renderNow(bool culling) {
       WbWrenOpenGlContext::instance()->swapBuffers(this);
       WbWrenOpenGlContext::doneWren();
     } else
-#endif
       WbWrenWindow::renderNow(culling);
     mLastRefreshTimer.start();
     emit mainRenderingEnded(mPhysicsRefresh);
@@ -2481,18 +2474,14 @@ void WbView3D::updateVirtualRealityHeadsetOverlay() {
     return;
   }
 
-#ifdef _WIN32
   if (WbVirtualRealityHeadset::isInUse()) {
     mVirtualRealityHeadsetOverlay->setVisible(true);
     mVirtualRealityHeadsetOverlay->setExternalTexture(WbVirtualRealityHeadset::instance()->visibleTexture());
     mParentWidget->setEnabled(false);
   } else {
-#endif
     mVirtualRealityHeadsetOverlay->setVisible(false);
     mParentWidget->setEnabled(true);
-#ifdef _WIN32
   }
-#endif
 
   renderLater();
 }

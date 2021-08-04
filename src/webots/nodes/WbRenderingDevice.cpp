@@ -22,10 +22,7 @@
 #include "WbWorld.hpp"
 #include "WbWrenRenderingContext.hpp"
 #include "WbWrenTextureOverlay.hpp"
-
-#ifdef _WIN32
 #include "WbVirtualRealityHeadset.hpp"
-#endif
 
 QList<WbRenderingDevice *> WbRenderingDevice::cRenderingDevices;
 

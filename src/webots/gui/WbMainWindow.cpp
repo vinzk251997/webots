@@ -69,10 +69,7 @@
 #include "WbWebotsUpdateManager.hpp"
 #include "WbWrenOpenGlContext.hpp"
 #include "WbWrenTextureOverlay.hpp"
-
-#ifdef _WIN32
 #include "WbVirtualRealityHeadset.hpp"
-#endif
 
 #include <QtCore/QDir>
 #include <QtCore/QTimer>
@@ -577,7 +574,6 @@ QMenu *WbMainWindow::createViewMenu() {
   addAction(mToggleFullScreenAction);
   addAction(mExitFullScreenAction);
 
-#ifdef _WIN32
   menu->addSeparator();
   subMenu = menu->addMenu(tr("&Virtual Reality Headset"));
   if (!WbVirtualRealityHeadset::isSteamVRInstalled()) {
@@ -600,7 +596,6 @@ QMenu *WbMainWindow::createViewMenu() {
   subMenu->addAction(actionManager->action(WbAction::VIRTUAL_REALITY_HEADSET_NO_EYE));
   subMenu->addSeparator();
   subMenu->addAction(actionManager->action(WbAction::VIRTUAL_REALITY_HEADSET_ANTI_ALIASING));
-#endif
 
   menu->addSeparator();
   menu->addAction(actionManager->action(WbAction::PERSPECTIVE_PROJECTION));
