@@ -34,6 +34,7 @@ int main(int argc, char **argv) {
 
   int steps = 15;
   while (steps > 0 && wb_robot_step(time_step) != -1) {
+    //printf("B CAR %f %f\n", wb_distance_sensor_get_value(left_sensor), wb_distance_sensor_get_value(right_sensor));
     ts_assert_double_is_bigger(wb_distance_sensor_get_value(right_sensor), 999.0,
                                "Right front wheel joint axis or anchor is wrong after artificial move.");
     ts_assert_double_is_bigger(wb_distance_sensor_get_value(left_sensor), 999.0,
@@ -45,6 +46,7 @@ int main(int argc, char **argv) {
 
   steps = 100;
   while (steps > 0 && wb_robot_step(time_step) != -1) {
+    //printf("A CAR %f %f\n", wb_distance_sensor_get_value(left_sensor), wb_distance_sensor_get_value(right_sensor));
     ts_assert_double_is_bigger(wb_distance_sensor_get_value(right_sensor), 999.0,
                                "Right front wheel joint axis or anchor is wrong after artificial move.");
     ts_assert_double_is_bigger(wb_distance_sensor_get_value(left_sensor), 999.0,

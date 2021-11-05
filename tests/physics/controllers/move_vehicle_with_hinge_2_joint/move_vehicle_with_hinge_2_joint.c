@@ -45,6 +45,8 @@ int main(int argc, char **argv) {
 
   int steps = 100;
   while (steps > 0 && wb_robot_step(time_step) != -1) {
+    printf("A VEH %f\n", wb_distance_sensor_get_value(sensor));
+
     ts_assert_double_is_bigger(wb_distance_sensor_get_value(sensor), 999.0, "Front wheel joint axis or anchor is wrong.");
     --steps;
   }

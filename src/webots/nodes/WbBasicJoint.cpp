@@ -413,6 +413,41 @@ bool WbBasicJoint::resetJointPositions() {
   }
 
   return true;
+
+  /*
+  WbSolid *const s = solidEndPoint();
+  if (s == NULL)
+    return false;
+
+  const WbVector3 t(s->translation());
+  const WbRotation r(s->rotation());
+  // printf("<<< %f %f %f\n", t[0], t[1], t[2]);
+
+  // const WbVector3 t(s->translationFromFile("__init__"));
+  // const WbRotation r(s->rotationFromFile("__init__"));
+
+  const WbSolidReference *const sr = solidReference();
+  // set ODE joint in initial position to avoid offset
+  if (sr == NULL) {
+    s->setTranslationAndRotation(mEndPointZeroTranslation, mEndPointZeroRotation);
+    s->resetPhysics();
+    setJoint();
+    s->setTranslationAndRotation(t, r);
+    s->resetPhysics();
+  } else {
+    // WbSolid *ss = sr->solid();
+    const WbVector3 t(s->translationFromFile("__init__"));
+    const WbRotation r(s->rotationFromFile("__init__"));
+
+    s->setTranslationAndRotation(mEndPointZeroTranslation, mEndPointZeroRotation);
+    s->resetPhysics();
+    setJoint();
+    s->setTranslationAndRotation(t, r);
+    s->resetPhysics();
+  }
+
+  return true;
+  */
 }
 
 void WbBasicJoint::retrieveEndPointSolidTranslationAndRotation(WbVector3 &it, WbRotation &ir) const {

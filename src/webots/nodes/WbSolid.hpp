@@ -231,6 +231,9 @@ public:
   static WbSolid *findSolidFromUniqueName(const QString &name);
   static QStringList splitUniqueNamesByEscapedPattern(const QString &text, const QString &pattern);
 
+  void setSolidReferenced(bool state) { mIsReferenced = state; };
+  bool isSolidReferenced(void) { return mIsReferenced; };
+
 signals:
   void contactPointsRequested();
   void massPropertiesChanged();
@@ -389,6 +392,7 @@ private:
   bool mIsPermanentlyKinematic;
 
   bool mIsKinematic;
+  bool mIsReferenced;  // set to true if this solid is referenced by a WbSolidReference
 
   bool mKinematicWarningPrinted;
   bool mHasDynamicSolidDescendant;

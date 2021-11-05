@@ -103,6 +103,7 @@ void WbSolid::init() {
   mUseInertiaMatrix = false;
   mIsPermanentlyKinematic = false;
   mIsKinematic = false;
+  mIsReferenced = false;
   mUpdatedInStep = false;
   mResetPhysicsInStep = false;
   mKinematicWarningPrinted = false;

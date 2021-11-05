@@ -42,6 +42,8 @@ WbSolidReference::WbSolidReference(const WbNode &other) : WbBaseNode(other) {
 
 // Destructor
 WbSolidReference::~WbSolidReference() {
+  if (mSolid && mSolid->isSolidReferenced())
+    mSolid->setSolidReferenced(false);
 }
 
 void WbSolidReference::preFinalize() {
@@ -54,6 +56,10 @@ void WbSolidReference::postFinalize() {
 }
 
 void WbSolidReference::updateName() {
+  // remove previous reference
+  if (mSolid)
+    mSolid->setSolidReferenced(false);
+
   WbSolid *const ts = topSolid();
   assert(ts);
   const QString &name = mName->value();
@@ -63,6 +69,8 @@ void WbSolidReference::updateName() {
   if (!name.isEmpty() && !linkToStaticEnvironment && mSolid.isNull())
     parsingWarn(
       tr("SolidReference has an invalid '%1' name or refers to its closest upper solid, which is prohibited.").arg(name));
+  else
+    mSolid->setSolidReferenced(true);
 }
 
 bool WbSolidReference::isClosedLoop() const {
