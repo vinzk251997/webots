@@ -391,7 +391,6 @@ void WbBasicJoint::updateOptionalRendering(int option) {
 /////////////////
 
 bool WbBasicJoint::resetJointPositions() {
-  /*
   WbSolid *const s = solidEndPoint();
   if (s == NULL)
     return false;
@@ -414,8 +413,8 @@ bool WbBasicJoint::resetJointPositions() {
   }
 
   return true;
-  */
 
+  /*
   WbSolid *const s = solidEndPoint();
   if (s == NULL)
     return false;
@@ -443,6 +442,7 @@ bool WbBasicJoint::resetJointPositions() {
     s->resetPhysics();
   }
   return true;
+  */
 }
 
 void WbBasicJoint::retrieveEndPointSolidTranslationAndRotation(WbVector3 &it, WbRotation &ir) const {

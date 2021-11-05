@@ -65,7 +65,7 @@ void WbTransform::reset(const QString &id) {
   // note: for solids, the set of these parameters has to occur only if mJointParents.size() == 0 and it is handled in
   // WbSolid::reset, otherwise it breaks the reset of hinge based joints
   WbSolid *s = dynamic_cast<WbSolid *>(this);
-  if (nodeType() != WB_NODE_TRACK_WHEEL && (!s || (s && s->isSolidReferenced()))) {
+  if (nodeType() != WB_NODE_TRACK_WHEEL && (!s)) {
     setTranslation(mSavedTranslations[id]);
     setRotation(mSavedRotations[id]);
   }

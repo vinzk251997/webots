@@ -2165,7 +2165,23 @@ void WbSolid::reset(const QString &id) {
   if (mJointParents.size() == 0) {
     setTranslation(translationFromFile(id));
     setRotation(rotationFromFile(id));
+  } else {
+    foreach (WbBasicJoint *const joint, mJointParents) {
+      WbSolidReference *sr = joint->solidReference();
+      if (sr) {
+        printf("!! %d\n", sr->isClosedLoop());
+        // const WbVector3 t(sr->solid()->translationFromFile(id));
+        // const WbRotation r(sr->solid()->rotationFromFile(id));
+        joint->setJoint();
+        sr->solid()->setTranslationAndRotation(translationFromFile(id), rotationFromFile(id));
+        sr->solid()->resetPhysics();
+
+        // sr->solid()->setTranslationAndRotation(t, r);
+        // sr->solid()->resetPhysics();
+      }
+    }
   }
+
   resetSingleSolidPhysics();
   resetContactPointsAndSupportPolygon();
   resetContactPoints();
