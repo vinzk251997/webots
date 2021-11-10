@@ -618,6 +618,38 @@ void wbu_driver_set_steering_angle(double steering_angle) {
   }
 }
 
+void wbu_driver_set_right_steering_angle(double angle) {
+  if (!_wbu_car_check_initialisation("wbu_driver_init()", "wbu_driver_set_right_steering_angle()"))
+    return;
+
+  if (isnan(angle)) {
+    fprintf(stderr, "Warning: wbu_driver_set_right_steering_angle() called with an invalid 'angle' argument (NaN)\n");
+    return;
+  }
+
+  instance->car->right_angle = angle;
+  wb_motor_set_position(instance->car->steering_motors[0], angle);
+
+  // update steering angle
+  instance->steering_angle = (instance->car->right_angle + instance->car->left_angle) * 0.5;
+}
+
+void wbu_driver_set_left_steering_angle(double angle) {
+  if (!_wbu_car_check_initialisation("wbu_driver_init()", "wbu_driver_set_left_steering_angle()"))
+    return;
+
+  if (isnan(angle)) {
+    fprintf(stderr, "Warning: wbu_driver_set_left_steering_angle() called with an invalid 'angle' argument (NaN)\n");
+    return;
+  }
+
+  instance->car->left_angle = angle;
+  wb_motor_set_position(instance->car->steering_motors[1], angle);
+
+  // update steering angle
+  instance->steering_angle = (instance->car->right_angle + instance->car->left_angle) * 0.5;
+}
+
 double wbu_driver_get_steering_angle() {
   if (!_wbu_car_check_initialisation("wbu_driver_init()", "wbu_driver_get_steering_angle()"))
     return 0;

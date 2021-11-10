@@ -44,6 +44,9 @@ namespace webots {
     void setSteeringAngle(double steeringAngle);
     double getSteeringAngle();
 
+    void setLeftSteeringAngle(double angle);
+    void setRightSteeringAngle(double angle);
+
     void setCruisingSpeed(double speed);
     double getTargetCruisingSpeed();
 

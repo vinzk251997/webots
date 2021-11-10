@@ -44,6 +44,9 @@ int wbu_driver_step();
 void wbu_driver_set_steering_angle(double steering_angle);
 double wbu_driver_get_steering_angle();
 
+void wbu_driver_set_left_steering_angle(double angle);
+void wbu_driver_set_right_steering_angle(double angle);
+
 void wbu_driver_set_cruising_speed(double speed);
 double wbu_driver_get_target_cruising_speed();
 
