@@ -55,6 +55,7 @@ private:
   WbSimulationState::Mode mStartupMode;
   WbMainWindow *mMainWindow;
   bool mShouldDoRendering;
+  bool mEnableAudio;
 
   Task mTask;
   QStringList mTaskArguments;

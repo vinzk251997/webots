@@ -101,6 +101,7 @@ WbGuiApplication::WbGuiApplication(int &argc, char **argv) :
   mShouldStartFullscreen = false;
   mStartupMode = WbSimulationState::NONE;
   mShouldDoRendering = true;
+  mEnableAudio = false;
 
   parseArguments();
 }
@@ -218,6 +219,8 @@ void WbGuiApplication::parseArguments() {
       mStartupMode = WbSimulationState::FAST;
     } else if (arg == "--no-rendering")
       mShouldDoRendering = false;
+    else if (arg == "--no-audio")
+      mEnableAudio = false;
     else if (arg == "convert") {
       mTask = CONVERT;
       mTaskArguments = args.mid(i);
@@ -354,6 +357,7 @@ bool WbGuiApplication::setup() {
 
   WbSimulationState::instance()->setMode(mStartupMode);
   WbSimulationState::instance()->setRendering(mShouldDoRendering);
+  WbSimulationState::instance()->setAudio(mEnableAudio);
 
   // check specified world file if any
   if (!mStartWorldName.isEmpty()) {

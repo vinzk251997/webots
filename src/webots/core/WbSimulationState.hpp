@@ -32,6 +32,7 @@ public:
   enum Mode { NONE, PAUSE, STEP, REALTIME, FAST };
   void setMode(Mode mode);
   void setRendering(bool show);
+  void setAudio(bool enable) { mEnableAudio = enable; };
   void undoMode() { setMode(mPreviousMode); }
   Mode mode() const { return mEnabled ? mMode : PAUSE; }
   Mode previousMode() const { return mEnabled ? mPreviousMode : PAUSE; }
@@ -40,6 +41,7 @@ public:
   bool isRealTime() const { return mMode == REALTIME; }
   bool isFast() const { return mMode == FAST; }
   bool isRendering() const { return mPerformRendering; }
+  bool isAudioEnabled() const { return mEnableAudio; }
   // pause/resume simulation for executing application dialogs
   void pauseSimulation();
   void resumeSimulation();
@@ -84,6 +86,7 @@ private:
   Mode mMode, mPreviousMode;
 
   bool mPerformRendering;
+  bool mEnableAudio;
   bool mEnabled;
   double mTime;
 
